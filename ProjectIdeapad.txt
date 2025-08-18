@@ -1,0 +1,74 @@
+🎯 MVP Features
+1. User Input - Setup Phase
+
+Let the user configure exercises and how much they want to do per death.
+
+✅ Add exercise
+
+Name of exercise (e.g. "Squats")
+
+Unit type: Reps or Seconds
+
+Amount per death (e.g. 2 reps or 5 seconds)
+
+✅ View/edit/delete added exercises
+
+2. User Input - Game Phase
+
+Let the user enter number of deaths after a gaming session.
+
+✅ Input: number of deaths (e.g. "10")
+
+3. Randomized Exercise Generator
+
+Generate a randomized workout based on:
+
+The selected exercises
+
+Multiplied by the number of deaths
+
+Randomly allocated proportions while maintaining the total
+
+4. Output
+
+✅ Output a list of exercises with their calculated reps/seconds
+
+✅ Provide summary (e.g. "Total: 25 reps + 30 seconds of planking")
+
+⚙️ Example Use Case
+Setup:
+
+User adds:
+
+Exercise	Unit	Per Death
+Squats	Reps	2
+Sit-ups	Reps	2
+Jumping Jacks	Reps	5
+Plank	Seconds	5
+Game Phase:
+
+User inputs 10 deaths
+
+Output (randomized):
+
+6 squats (3 deaths)
+
+4 sit-ups (2 deaths)
+
+15 jumping jacks (3 deaths)
+
+10 seconds planking (2 deaths)
+
+Total deaths accounted for: 10 ✅
+
+🔜 Future Enhancements (Post-MVP)
+
+GUI with Tkinter, PyQt, or a web front-end
+
+Save exercise presets/profiles
+
+Add intensity multipliers (e.g., difficulty level)
+
+Sound alerts or countdown timers for timed exercises
+
+Integration with fitness trackers (Apple Health, Fitbit, etc.)
