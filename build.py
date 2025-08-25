@@ -1,88 +1,88 @@
 #!/usr/bin/env python3
 """
-Build script for GGOS executable
+Build script for GGOS - Gaming Death Workout System
+Creates a standalone executable using PyInstaller
 """
 
-import os
-import sys
 import subprocess
-import shutil
+import sys
+import os
 from pathlib import Path
 
 def install_requirements():
-    """Install required packages"""
-    print("Installing requirements...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-    
-    # Install PyInstaller for building executable
-    print("Installing PyInstaller...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
+    """Install required packages for building"""
+    print("Installing build requirements...")
+    try:
+        subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
+        print("✅ PyInstaller installed successfully")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to install PyInstaller: {e}")
+        return False
+    return True
 
 def build_executable():
     """Build the executable using PyInstaller"""
-    print("Building executable...")
+    print("Building GGOS executable...")
     
-    # PyInstaller command
-    cmd = [
-        "pyinstaller",
-        "--onefile",  # Create a single executable file
-        "--windowed",  # Don't show console window on Windows
-        "--name=GGOS",  # Name of the executable
-        "--icon=assets/icon.ico" if os.path.exists("assets/icon.ico") else "",  # Icon if available
-        "--add-data=src;src",  # Include source files
-        "main.py"
-    ]
+    # Check if spec file exists
+    spec_file = Path("GGOS.spec")
+    if spec_file.exists():
+        print("Using existing GGOS.spec file...")
+        cmd = [sys.executable, "-m", "PyInstaller", "GGOS.spec"]
+    else:
+        print("Creating new executable with PyInstaller...")
+        cmd = [
+            sys.executable, "-m", "PyInstaller",
+            "--onefile",
+            "--windowed",
+            "--name=GGOS",
+            "--add-data=src;src",  # Include src directory
+            "--hidden-import=src.gui.app",
+            "--hidden-import=src.gui.frames.workout_frame",
+            "--hidden-import=src.gui.frames.setup_frame",
+            "--hidden-import=src.gui.frames.history_frame", 
+            "--hidden-import=src.gui.frames.settings_frame",
+            "--hidden-import=src.models.exercise",
+            "--hidden-import=src.models.workout",
+            "--hidden-import=src.services.storage",
+            "--hidden-import=customtkinter",
+            "--hidden-import=PIL",
+            "main.py"
+        ]
     
-    # Remove empty strings
-    cmd = [arg for arg in cmd if arg]
-    
-    subprocess.check_call(cmd)
-    
-    print("Executable built successfully!")
-    print(f"Location: {os.path.join('dist', 'GGOS.exe')}")
-
-def create_assets_directory():
-    """Create assets directory if it doesn't exist"""
-    assets_dir = Path("assets")
-    assets_dir.mkdir(exist_ok=True)
-    
-    # Create a simple icon placeholder if none exists
-    icon_path = assets_dir / "icon.ico"
-    if not icon_path.exists():
-        print("No icon found. Creating placeholder...")
-        # You can add icon creation logic here if needed
+    try:
+        subprocess.run(cmd, check=True)
+        print("✅ Executable built successfully!")
+        
+        # Check if executable was created
+        exe_path = Path("dist/GGOS.exe")
+        if exe_path.exists():
+            size_mb = exe_path.stat().st_size / (1024 * 1024)
+            print(f"📁 Executable created: {exe_path} ({size_mb:.1f} MB)")
+            return True
+        else:
+            print("❌ Executable not found in dist/ directory")
+            return False
+            
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Build failed: {e}")
+        return False
 
 def main():
     """Main build process"""
-    print("🚀 Building GGOS Executable")
-    print("=" * 40)
+    print("🔨 Building GGOS - Get Good or Swole!")
+    print("=" * 50)
     
-    try:
-        # Create assets directory
-        create_assets_directory()
-        
-        # Install requirements
-        install_requirements()
-        
-        # Build executable
-        build_executable()
-        
-        print("\n✅ Build completed successfully!")
-        print("\n📁 Files created:")
-        print("  - dist/GGOS.exe (Windows executable)")
-        print("  - build/ (Build files)")
-        print("  - GGOS.spec (PyInstaller spec file)")
-        
-        print("\n🎯 To run the application:")
-        print("  - Double-click dist/GGOS.exe")
-        print("  - Or run: python main.py")
-        
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Build failed: {e}")
+    # Install requirements
+    if not install_requirements():
         sys.exit(1)
-    except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+    
+    # Build executable
+    if not build_executable():
         sys.exit(1)
+    
+    print("\n🎉 Build completed successfully!")
+    print("You can now run the executable from the dist/ directory")
 
 if __name__ == "__main__":
     main()
