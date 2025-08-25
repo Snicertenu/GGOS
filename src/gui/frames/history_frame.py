@@ -23,21 +23,26 @@ class HistoryFrame(ctk.CTkFrame):
         """Setup the user interface"""
         # Configure grid to fill entire frame
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        
+        # Create main scrollable frame
+        self.main_scrollable_frame = ctk.CTkScrollableFrame(self)
+        self.main_scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        self.main_scrollable_frame.grid_columnconfigure(0, weight=1)
         
         # Title
         title_label = ctk.CTkLabel(
-            self,
+            self.main_scrollable_frame,
             text="📊 Workout History",
             font=ctk.CTkFont(size=24, weight="bold")
         )
         title_label.grid(row=0, column=0, pady=(20, 10), sticky="w", padx=20)
         
         # Controls section
-        self.create_controls_section(self)
+        self.create_controls_section(self.main_scrollable_frame)
         
         # History display section
-        self.create_history_section(self)
+        self.create_history_section(self.main_scrollable_frame)
     
     def create_controls_section(self, parent):
         """Create the controls section"""

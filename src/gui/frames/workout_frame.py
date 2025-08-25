@@ -29,21 +29,26 @@ class WorkoutFrame(ctk.CTkFrame):
         """Setup the user interface"""
         # Configure grid to fill entire frame
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        
+        # Create main scrollable frame
+        self.main_scrollable_frame = ctk.CTkScrollableFrame(self)
+        self.main_scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        self.main_scrollable_frame.grid_columnconfigure(0, weight=1)
         
         # Title
         title_label = ctk.CTkLabel(
-            self,
+            self.main_scrollable_frame,
             text="🏃 Generate Workout",
             font=ctk.CTkFont(size=24, weight="bold")
         )
         title_label.grid(row=0, column=0, pady=(20, 10), sticky="w", padx=20)
         
         # Input section
-        self.create_input_section(self)
+        self.create_input_section(self.main_scrollable_frame)
         
         # Results section
-        self.create_results_section(self)
+        self.create_results_section(self.main_scrollable_frame)
         
 
     

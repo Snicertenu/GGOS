@@ -9,3 +9,4 @@ if exist "dist\GGOS.exe" (
     echo Please run: python -m PyInstaller --onefile --windowed --name=GGOS main.py
     pause
 )
+

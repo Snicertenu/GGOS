@@ -23,25 +23,30 @@ class SettingsFrame(ctk.CTkFrame):
         """Setup the user interface"""
         # Configure grid to fill entire frame
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(5, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        
+        # Create main scrollable frame
+        self.main_scrollable_frame = ctk.CTkScrollableFrame(self)
+        self.main_scrollable_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        self.main_scrollable_frame.grid_columnconfigure(0, weight=1)
         
         # Title
         title_label = ctk.CTkLabel(
-            self,
+            self.main_scrollable_frame,
             text="🔧 Settings",
             font=ctk.CTkFont(size=24, weight="bold")
         )
         title_label.grid(row=0, column=0, pady=(20, 10), sticky="w", padx=20)
         
         # Create settings sections
-        self.create_appearance_section(self)
-        self.create_auto_input_section(self)
-        self.create_fitness_tracker_section(self)
-        self.create_about_section(self)
+        self.create_appearance_section(self.main_scrollable_frame)
+        self.create_auto_input_section(self.main_scrollable_frame)
+        self.create_fitness_tracker_section(self.main_scrollable_frame)
+        self.create_about_section(self.main_scrollable_frame)
         
         # Save button
         save_btn = ctk.CTkButton(
-            self,
+            self.main_scrollable_frame,
             text="Save Settings",
             command=self.save_settings,
             height=40,
